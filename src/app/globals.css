@@ -63,10 +63,5 @@
   * {
     border-color: hsl(var(--border));
   }
-  body {
-    @apply bg-cover bg-no-repeat bg-fixed bg-center;
-    color: hsl(var(--foreground));
-    background-image: url('/backround.jpg'); /* relative to public/ folder */
-    background-color: hsl(var(--background)); /* fallback color */
-  }
+ 
 }

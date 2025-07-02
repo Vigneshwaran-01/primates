@@ -42,7 +42,7 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${inter.variable} ${bebas_neue.variable} ${montserrat_nav.variable}`}
     >
-      <body className={`${inter.className} min-h-screen flex flex-col  text-foreground`}>
+      <body className={`${inter.className} min-h-screen bg-black flex flex-col  text-foreground`}>
         <AuthProvider>
           <CartProvider>
             <Header />

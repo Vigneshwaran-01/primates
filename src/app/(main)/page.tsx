@@ -6,6 +6,7 @@ import { Bebas_Neue } from 'next/font/google';
 import AnimatedNewArrivals from '@/components/home/AnimatedNewArrivals';
 // import { TypewriterEffect } from '@/components/ui/text-hover';
 import CyberCarousel from '@/components/home/CyberCarousel';
+import SpecialOfferBanner from '@/components/home/SpecialOfferBanner';
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -111,6 +112,7 @@ export default async function HomePage() {
 
   return (
     <>
+     <SpecialOfferBanner />
       <CyberCarousel />
       <AnimatedNewArrivals
         products={newArrivalProducts.map(product => ({
@@ -118,6 +120,7 @@ export default async function HomePage() {
           category: product.category?.name
         }))}
       />
+     
       
     </>
   );
