@@ -1,0 +1,211 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int        @id @default(autoincrement())
+  username      String     @unique
+  email         String     @unique
+  password_hash String
+  firstName     String?
+  lastName      String?
+  phoneNumber   String?
+  address       String?
+  city          String?
+  state         String?
+  country       String?
+  postalCode    String?
+  createdAt     DateTime   @default(now())
+  updatedAt     DateTime   @updatedAt
+  isActive      Boolean    @default(true)
+  lastLogin     DateTime?
+  addressLine2  String?
+  Cart          Cart[]
+  Orders        Order[]
+  Reviews       Review[]
+  Wishlist      Wishlist[]
+}
+
+model Category {
+  id          Int        @id @default(autoincrement())
+  name        String
+  description String?
+  parentId    Int?
+  imageUrl    String?
+  isActive    Boolean    @default(true)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  parent      Category?  @relation("CategoryToCategory", fields: [parentId], references: [id])
+  children    Category[] @relation("CategoryToCategory")
+  Products    Product[]
+}
+
+model Product {
+  id               Int         @id @default(autoincrement())
+  name             String
+  description      String?
+  price            Float
+  discountedPrice  Float?
+  categoryId       Int
+  stockQuantity    Int         @default(0)
+  sku              String      @unique
+  imageUrl         String?
+  additionalImages Json?
+  isFeatured       Boolean     @default(false)
+  isActive         Boolean     @default(true)
+  createdAt        DateTime    @default(now())
+  updatedAt        DateTime    @updatedAt
+  colors           Json?
+  deliveryInfo     String?
+  sideImages       Json?
+  sizes            Json?
+  specifications   Json?
+  Cart             Cart[]
+  OrderItems       OrderItem[]
+  category         Category    @relation(fields: [categoryId], references: [id])
+  Reviews          Review[]
+  Wishlist         Wishlist[]
+}
+
+model Cart {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  quantity  Int      @default(1)
+  addedAt   DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Wishlist {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  productId Int
+  addedAt   DateTime @default(now())
+  product   Product  @relation(fields: [productId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+
+  @@unique([userId, productId])
+}
+
+model Order {
+  id                Int              @id @default(autoincrement())
+  userId            Int
+  orderDate         DateTime         @default(now())
+  totalAmount       Float
+  status            OrderStatus      @default(pending)
+  paymentStatus     PaymentStatus    @default(pending)
+  trackingNumber    String?
+  notes             String?
+  refundReason      String?
+  shippingAddressId Int?             @unique
+  shippingAddress   ShippingDetail?  @relation("OrderShippingAddress", fields: [shippingAddressId], references: [id])
+  user              User             @relation(fields: [userId], references: [id])
+  OrderItems        OrderItem[]
+  Payments          Payment[]
+  ShippingDetails   ShippingDetail[] @relation("OrderShippingDetails")
+}
+
+model OrderItem {
+  id             Int     @id @default(autoincrement())
+  orderId        Int
+  productId      Int
+  quantity       Int
+  unitPrice      Float
+  discountAmount Float   @default(0)
+  order          Order   @relation(fields: [orderId], references: [id])
+  product        Product @relation(fields: [productId], references: [id])
+}
+
+model ShippingDetail {
+  id                   Int       @id @default(autoincrement())
+  orderId              Int
+  firstName            String
+  lastName             String
+  email                String
+  phoneNumber          String
+  addressLine1         String
+  addressLine2         String?
+  city                 String
+  state                String
+  country              String
+  postalCode           String
+  shippingMethod       String?
+  trackingUrl          String?
+  estimatedDelivery    DateTime?
+  actualDelivery       DateTime?
+  orderShippingAddress Order?    @relation("OrderShippingAddress")
+  order                Order     @relation("OrderShippingDetails", fields: [orderId], references: [id])
+}
+
+model Payment {
+  id                Int           @id @default(autoincrement())
+  orderId           Int
+  paymentMethod     String
+  transactionId     String
+  amount            Float
+  currency          String        @default("INR")
+  status            PaymentStatus
+  paymentDate       DateTime      @default(now())
+  razorpayOrderId   String?
+  razorpayPaymentId String?
+  razorpaySignature String?
+  order             Order         @relation(fields: [orderId], references: [id])
+}
+
+model Review {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  productId  Int
+  rating     Int
+  comment    String?
+  reviewDate DateTime @default(now())
+  isApproved Boolean  @default(false)
+  product    Product  @relation(fields: [productId], references: [id])
+  user       User     @relation(fields: [userId], references: [id])
+}
+
+model Admin {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique
+  email         String    @unique
+  password_hash String
+  firstName     String?
+  lastName      String?
+  role          AdminRole @default(admin)
+  isActive      Boolean   @default(true)
+  lastLogin     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+}
+
+enum OrderStatus {
+  pending
+  processing
+  shipped
+  delivered
+  cancelled
+  refunded
+  refund_requested
+}
+
+enum PaymentStatus {
+  pending
+  paid
+  failed
+  refunded
+}
+
+enum AdminRole {
+  super_admin
+  admin
+  content_manager
+  order_manager
+}
