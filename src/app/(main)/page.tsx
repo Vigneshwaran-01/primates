@@ -8,6 +8,10 @@ import AnimatedNewArrivals from '@/components/home/AnimatedNewArrivals';
 import CyberCarousel from '@/components/home/CyberCarousel';
 import SpecialOfferBanner from '@/components/home/SpecialOfferBanner';
 import HeroVideoSection from '@/components/home/HeroVideoSection';
+import PrimateHero from '@/components/home/PrimateHero';
+import ZymAboutSection from '@/components/home/ZymAboutSection';
+import CardRow from '@/components/home/SmartCard';
+import { HeroParallaxDemo } from '@/components/home/HeroParallaxDemo';
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -122,6 +126,13 @@ export default async function HomePage() {
           category: product.category?.name
         }))}
       />
+      <HeroParallaxDemo />
+
+       <ZymAboutSection />
+
+ <PrimateHero />
+ <CardRow />
+
      
       
     </>
