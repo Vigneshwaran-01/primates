@@ -7,6 +7,7 @@ import AnimatedNewArrivals from '@/components/home/AnimatedNewArrivals';
 // import { TypewriterEffect } from '@/components/ui/text-hover';
 import CyberCarousel from '@/components/home/CyberCarousel';
 import SpecialOfferBanner from '@/components/home/SpecialOfferBanner';
+import HeroVideoSection from '@/components/home/HeroVideoSection';
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -74,8 +75,8 @@ interface ProductFromDb {
   category?: CategoryForPage | null;
   Reviews: { rating: number }[];
   isFeatured?: boolean;
-  sizes?: string[];
-  colors?: string[];
+  sizes?: string[] | null;
+  colors?: string[] | null;
   specifications?: object;
   deliveryInfo?: string | null;
 }
@@ -95,10 +96,10 @@ return productsFromDb.map((product: ProductFromDb, index: number): ProductForPag
     : undefined,
   Reviews: product.Reviews || [],
   isFeatured: product.isFeatured,
-  
-  // ✅ New fields:
-  sizes: product.sizes || [],
-  colors: product.colors || [],
+
+sizes: product.sizes && Array.isArray(product.sizes) ? product.sizes.filter(Boolean) : [],
+colors: product.colors && Array.isArray(product.colors) ? product.colors.filter(Boolean) : [],
+
   specifications: product.specifications || {},
   deliveryInfo: product.deliveryInfo || null,
 }));
@@ -112,6 +113,7 @@ export default async function HomePage() {
 
   return (
     <>
+    <HeroVideoSection />
      <SpecialOfferBanner />
       <CyberCarousel />
       <AnimatedNewArrivals

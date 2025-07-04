@@ -7,6 +7,9 @@ import { TextPlugin } from 'gsap/TextPlugin';
 import { ChevronDown, Plus } from 'lucide-react';
 import Image from 'next/image';
 import AnimatedNewArrivals from '@/components/home/AnimatedNewArrivals';
+import { Russo_One } from 'next/font/google';
+
+const russo = Russo_One({ subsets: ['latin'], weight: '400', variable: '--font-russo' });
 
 gsap.registerPlugin(TextPlugin);
 
@@ -126,14 +129,14 @@ export default function CyberCarousel() {
 
       <section
         ref={containerRef}
-        className="relative h-screen bg-black text-white overflow-hidden flex items-center justify-center font-['Russo_One',_sans-serif]"
+        className={`relative h-screen bg-black text-white overflow-hidden flex items-center justify-center `}
       >
         {/* Responsive Sidebars */}
         <div className="sidebar-red absolute left-0 top-0 h-full w-12 sm:w-20 md:w-32 bg-[#D30000] transform -skew-x-12 origin-top-left z-0"></div>
         <div className="sidebar-red absolute right-0 top-0 h-full w-12 sm:w-20 md:w-32 bg-[#D30000] transform skew-x-12 origin-top-right z-0"></div>
         
         {/* ✅ Responsive Title Block */}
-        <div className="absolute top-24 left-4 sm:left-12 md:left-24 lg:left-32 z-30 transform -skew-x-12 max-w-[80%]">
+        <div className={`absolute top-24 left-4 sm:left-12 md:left-24 lg:left-32 z-30 transform -skew-x-12 max-w-[80%]  ${russo.variable}`}>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight sm:leading-none">
             <div className="reveal-element text-stroke-white">THEORY OF IDEOLOGY</div>
             <div className="reveal-element text-[#D30000] mt-1">COLLECTION</div>
@@ -143,14 +146,12 @@ export default function CyberCarousel() {
         
         {/* ✅ Responsive Left Paginator */}
         <div className="absolute top-1/2 -translate-y-1/2 left-2 sm:left-4 md:left-12 z-40 flex flex-col items-center gap-8">
-            <div className="[writing-mode:vertical-rl] text-xs sm:text-sm tracking-[0.3em] uppercase opacity-70 reveal-element">
-              BUY NOW
-            </div>
+           
             <div className="flex flex-col items-center gap-2 reveal-element">
               {products.map((_, i) => (
                 <div key={i} className={`w-4 h-4 sm:w-5 sm:h-5 rounded-full transition-all duration-500 ${active === i ? 'bg-white shadow-[0_0_10px_white]' : 'border-2 border-white/50'}`}></div>
               ))}
-              <ChevronDown className="mt-2 text-white/80 w-5 h-5 sm:w-6 sm:h-6" />
+              {/* <ChevronDown className="mt-2 text-white/80 w-5 h-5 sm:w-6 sm:h-6" /> */}
             </div>
         </div>
 
@@ -200,9 +201,9 @@ export default function CyberCarousel() {
               </button>
             </div>
             {/* Hiding Japanese text on small screens to reduce clutter */}
-            <div className="hidden md:block text-right text-white/70 max-w-[280px] text-sm leading-relaxed reveal-element">
+            {/* <div className="hidden md:block text-right text-white/70 max-w-[280px] text-sm leading-relaxed reveal-element">
                 猫の献身と他の世界とのつながりを結びこ付ける方法が発見されました. すべての伝説はここから始まり、動機覚行為を助けるために悪
-            </div>
+            </div> */}
         </div>
         
         {/* ✅ Responsive Bottom Elements */}

@@ -54,7 +54,7 @@ export default function AnimatedNewArrivals({ products: propProducts }: Animated
     return p.name.toLowerCase().includes(activeCategory);
   });
   
-  const tamilGlyphs = ['அ', 'க', 'ச', 'ட்', 'இ', 'ஞ', 'ய்'];
+  const tamilGlyphs = ['●', '◆', '⬤', '■', '△', '✦', '✕'];
 
   // 🔥 NEW: Pre-defined positions for controlled, aesthetic placement in corners and edges
   const glyphPositions = [
@@ -145,19 +145,30 @@ export default function AnimatedNewArrivals({ products: propProducts }: Animated
       </div>
 
       {/* Main Content Wrapper (z-20) */}
-      <div className="relative z-20"> 
+      <div className={`relative z-20 `}> 
         <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
-          <div className={`max-w-xl text-center ${chakra.variable} md:text-left font-chakra`}>
-            <h2 ref={titleRef} className="text-4xl sm:text-5xl font-bold tracking-wider text-white leading-tight">
-              We're all about{' '}
-              <span className="text-[#D30000] italic font-semibold">fresh styles</span>
-              {' & '}
-              <span className="italic font-semibold text-white">good vibes.</span>
-            </h2>
-            <p className="mt-4 text-base sm:text-lg text-gray-400 tracking-wide">
-              Our clothes are made to fit your personality.
-            </p>
-          </div>
+        <div className={`relative z-20 ${chakra.variable} `}>
+  <div className="flex flex-col md:flex-row justify-between items-start gap-8 mb-12">
+    {/* ⬇️ Styled Hero Heading */}
+    <div className="max-w-xl text-left transform -skew-x-6">
+      <h2
+        ref={titleRef}
+        className="text-4xl sm:text-5xl lg:text-5xl font-black uppercase italic leading-tight "
+      >
+        <span className=" font-bold text-stroke-white">WE’RE ALL ABOUT</span>
+        <span className="block text-[#D30000]  mt-1">
+          FRESH STYLES
+        </span>
+        <span className="block text-stroke-white mt-1">AND GOOD VIBES</span>
+      </h2>
+
+      <p className="mt-6 text-gray-400 text-base sm:text-lg tracking-wider">
+        Our clothes are made to fit your personality.
+      </p>
+    </div>
+  </div>
+</div>
+
 
           <div className="flex flex-wrap gap-2 justify-center md:justify-end shrink-0 mx-auto md:mx-0">
             {categories.map((cat) => (

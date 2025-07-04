@@ -206,7 +206,7 @@ export default function Header() {
                     <div ref={logoRef}>
                       <Link
                         href="/"
-                        className={`text-4xl lg:text-5xl text-white font-bebas font-bold transition-colors duration-300 ease-in-out italic tracking-wide ${logoHoverTextColorClass}`}
+                        className={`text-4xl lg:text-5xl text-white font-bebas font-bold transition-colors tracking-tight duration-300 ease-in-out italic  ${logoHoverTextColorClass}`}
                     >
                         PRIMATE
                     </Link>
@@ -312,7 +312,7 @@ export default function Header() {
                                         <Button variant="outline" size="sm" className="text-xs px-3 py-1.5 border-white/50 text-white/80 hover:border-[#D30000] hover:bg-[#D30000]/20 hover:text-[#D30000]">Login</Button>
                                     </Link>
                                     <Link href="/register">
-                                        <Button size="sm" className="text-xs px-3 py-1.5 bg-[#D30000] text-black hover:bg-red-400">Register</Button>
+                                        <Button size="sm" className="text-xs px-3 py-1.5 bg-[#D30000] text-white hover:bg-red-400">Register</Button>
                                     </Link>
                                 </div>
                             )}
