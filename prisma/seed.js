@@ -76,10 +76,10 @@ await prisma.product.upsert({
     sizes: ["M", "L", "XL", "2XL", "3XL"],
     colors: ["black", "white", "olive", "burgundy"],
     specifications: {
-      Material: "Cotton Fleece",
-      Fit: "Oversized",
-      Closure: "Full Zip",
-      Hood: "Adjustable Drawstring"
+      "Material": "Cotton Fleece",
+      "Fit": "Oversized",
+      "Closure": "Full Zip",
+      "Hood": "Adjustable Drawstring"
     },
     deliveryInfo: "Delivered in 3–5 business days. COD available.",
     isFeatured: false,
@@ -107,10 +107,10 @@ await prisma.product.upsert({
     sizes: ["S", "M", "L", "XL", "2XL"],
     colors: ["black", "gray", "navy"],
     specifications: {
-      Material: "Nylon-Spandex Blend",
-      Fit: "Compression",
-      Neck: "Crew Neck",
-      SleeveLength: "Short Sleeve"
+      "Material": "Nylon-Spandex Blend",
+      "Fit": "Compression",
+      "Neck": "Crew Neck",
+      "SleeveLength": "Short Sleeve"
     },
     deliveryInfo: "Ships within 4–6 business days. Free shipping above ₹499.",
     isFeatured: true,
