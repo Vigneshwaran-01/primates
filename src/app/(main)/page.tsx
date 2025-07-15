@@ -12,6 +12,8 @@ import PrimateHero from '@/components/home/PrimateHero';
 import ZymAboutSection from '@/components/home/ZymAboutSection';
 import CardRow from '@/components/home/SmartCard';
 import { HeroParallaxDemo } from '@/components/home/HeroParallaxDemo';
+import OfferPopup from '@/components/home/OfferPopup';
+
 
 const bebas = Bebas_Neue({
   weight: '400',
@@ -117,8 +119,11 @@ export default async function HomePage() {
 
   return (
     <>
+    <SpecialOfferBanner />
+    <OfferPopup />
     <HeroVideoSection />
-     <SpecialOfferBanner />
+
+     
       <CyberCarousel />
       <AnimatedNewArrivals
         products={newArrivalProducts.map(product => ({

@@ -41,14 +41,14 @@ export default function SpecialOfferBanner() {
     [...offers, ...offers].map((text, index) => (
       <div
         key={index}
-        className="ticker-item flex items-center gap-3 text-white text-sm font-semibold tracking-widest uppercase px-6 whitespace-nowrap"
+        className="ticker-item flex items-center gap-3 text-black text-sm font-semibold tracking-widest uppercase px-6 whitespace-nowrap"
       >
         <span className="text-lg">✦</span> {text}
       </div>
     ));
 
   return (
-    <div className="relative overflow-hidden bg-black h-10 w-full border-t border-b border-white/10">
+    <div className="relative overflow-hidden bg-white h-10 w-full border-t border-b border-white/10">
       <div ref={tickerRef} className="flex w-max">
         {renderItems()}
       </div>
