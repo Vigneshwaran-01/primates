@@ -1,4 +1,4 @@
-// app/(main)/checkout/page.js
+// CheckoutPage.jsx
 'use client';
 
 import { Suspense, useEffect, useState } from 'react';
@@ -10,6 +10,8 @@ import { useAuth } from '@/providers/AuthProvider';
 import Image from 'next/image';
 import Link from 'next/link';
 import { loadRazorpay } from '@/lib/razorpay';
+import { CheckCircle, AlertTriangle, Lock, User } from 'lucide-react';  // Import icons
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select" // Importing Select Components
 
 export const dynamic = 'force-dynamic';
 
@@ -76,7 +78,9 @@ function CheckoutContent() {
                 name: item.name,
                 price: item.price,
                 quantity: item.quantity,
-                imageUrl: item.imageUrl || null
+                imageUrl: item.imageUrl || null,
+                color: item.color, // Include color
+                size: item.size, // Include size
               })),
               total
             });
@@ -113,25 +117,34 @@ function CheckoutContent() {
 
   return (
     <div className="container mx-auto py-8 px-4">
-      <h1 className="text-3xl font-bold mb-8">Checkout</h1>
-      
+      <h1 className="text-3xl font-bold mb-8 text-gray-800">Checkout</h1>
+
       {showLoginModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="bg-white p-8 rounded-lg max-w-md w-full">
-            <h2 className="text-2xl font-bold mb-4">Login Required</h2>
-            <p className="mb-6">You need to login to proceed with checkout.</p>
+            <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded text-center font-semibold flex items-center space-x-2">
+              <AlertTriangle className="h-5 w-5" />
+              <span>Please login to checkout.</span>
+            </div>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800 flex items-center space-x-2">
+              <Lock className="h-6 w-6" />
+              <span>Login Required</span>
+            </h2>
+            <p className="mb-6 text-gray-700">You need to login to proceed with checkout.</p>
             <div className="flex flex-col space-y-3">
               <Link
                 href={`/login?redirect=/checkout`}
-                className="bg-primary text-white py-2 px-4 rounded-md text-center hover:bg-primary-dark transition-colors"
+                className="bg-primary text-white py-3 px-4 rounded-md text-center hover:bg-primary-dark transition-colors flex items-center justify-center space-x-2"
               >
-                Login
+                <User className="h-5 w-5" />
+                <span>Login</span>
               </Link>
               <Link
                 href={`/register?redirect=/checkout`}
-                className="border border-primary text-primary py-2 px-4 rounded-md text-center hover:bg-gray-50 transition-colors"
+                className="border border-primary text-primary py-3 px-4 rounded-md text-center hover:bg-gray-50 transition-colors flex items-center justify-center space-x-2"
               >
-                Create Account
+                <CheckCircle className="h-5 w-5" />
+                <span>Create Account</span>
               </Link>
               <button
                 onClick={() => setShowLoginModal(false)}
@@ -146,8 +159,8 @@ function CheckoutContent() {
 
       <div className="grid md:grid-cols-3 gap-8">
         <div className="md:col-span-2">
-          <div className="bg-white p-6 rounded-lg shadow-sm">
-            <h2 className="text-xl font-semibold mb-4">Review Your Order ({itemCount} items)</h2>
+          <div className="bg-white p-6 rounded-lg shadow-md">
+            <h2 className="text-xl font-semibold mb-4 text-gray-800">Review Your Order ({itemCount} items)</h2>
             <div className="space-y-4">
               {items.map((item) => (
                 <div key={item.id} className="flex items-center gap-4 border-b pb-4">
@@ -161,12 +174,44 @@ function CheckoutContent() {
                     />
                   </div>
                   <div className="flex-1">
-                    <h3 className="font-medium">{item.name}</h3>
+                    <h3 className="font-medium text-gray-800">{item.name}</h3>
                     <p className="text-gray-600">
                       ${item.price.toFixed(2)} × {item.quantity}
                     </p>
+
+                    {/* Display Size and Color as Select Components */}
+                    {item.size && (
+                      <Select disabled defaultValue={item.size}>
+                        <SelectTrigger className="w-[180px] mt-1">
+                          <SelectValue placeholder="Select Size" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={item.size}>{item.size}</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+
+                    {item.color && (
+                      <Select disabled defaultValue={item.color}>
+                        <SelectTrigger className="w-[180px] mt-1">
+                          <SelectValue placeholder="Select Color" />
+                        </SelectTrigger>
+                        <SelectContent>
+                          <SelectItem value={item.color}>
+                            <div className="flex items-center space-x-1">
+                              <span
+                                className="block w-4 h-4 rounded-full border"
+                                style={{ backgroundColor: item.color }}
+                              ></span>
+                              <span>{item.color}</span>
+                            </div>
+                          </SelectItem>
+                        </SelectContent>
+                      </Select>
+                    )}
+
                   </div>
-                  <p className="font-semibold">
+                  <p className="font-semibold text-gray-800">
                     ${(item.price * item.quantity).toFixed(2)}
                   </p>
                 </div>
@@ -174,47 +219,47 @@ function CheckoutContent() {
             </div>
           </div>
         </div>
-        
-        <div className="border rounded-lg p-6 h-fit sticky top-4">
-          <h2 className="text-xl font-bold mb-4">Payment Summary</h2>
+
+        <div className="border rounded-lg shadow-md p-6 h-fit sticky top-4 bg-white">
+          <h2 className="text-xl font-bold mb-4 text-gray-800">Payment Summary</h2>
           <div className="space-y-4">
-            <div className="flex justify-between">
+            <div className="flex justify-between text-gray-700">
               <span>Subtotal ({itemCount} items)</span>
               <span>${total.toFixed(2)}</span>
             </div>
-            <div className="flex justify-between">
+            <div className="flex justify-between text-gray-700">
               <span>Shipping</span>
               <span>Free</span>
             </div>
-            <div className="border-t pt-4 flex justify-between font-bold text-lg">
+            <div className="border-t pt-4 flex justify-between font-bold text-lg text-gray-800">
               <span>Total</span>
               <span>${total.toFixed(2)}</span>
             </div>
-            
+
             {user ? (
               <>
-                <Button 
+                <Button
                   onClick={handleRazorpayPayment}
-                  className="w-full mt-6 py-6 text-lg"
+                  className="w-full mt-6 py-3 text-lg"
                   disabled={isProcessing}
                 >
                   {isProcessing ? 'Processing...' : 'Pay with Razorpay'}
                 </Button>
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 mt-2">
                   Logged in as {user.email}
                 </p>
               </>
             ) : (
               <>
-                <Button 
+                <Button
                   onClick={() => setShowLoginModal(true)}
-                  className="w-full mt-6 py-6 text-lg bg-primary hover:bg-primary-dark"
+                  className="w-full mt-6 py-3 text-lg bg-primary text-white hover:bg-primary-dark"
                 >
                   Login to Checkout
                 </Button>
                 <p className="text-sm text-gray-500 mt-2">
                   Already have an account?{' '}
-                  <button 
+                  <button
                     onClick={() => setShowLoginModal(true)}
                     className="text-primary hover:underline"
                   >
@@ -223,11 +268,11 @@ function CheckoutContent() {
                 </p>
               </>
             )}
-            
+
             {error && (
-              <p className="text-red-500 text-sm mt-2">{error}</p>
+              <p className="text-red-500 text-sm mt-2 flex items-center space-x-2"><AlertTriangle className="h-4 w-4" /><span>{error}</span></p>
             )}
-            
+
             <p className="text-xs text-gray-500 mt-4">
               By completing your purchase, you agree to our Terms of Service and Privacy Policy.
             </p>

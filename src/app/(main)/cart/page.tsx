@@ -1,3 +1,4 @@
+// CartPage.jsx
 'use client';
 
 import { Button } from '@/components/ui/button';
@@ -9,6 +10,7 @@ import { loadRazorpay } from '@/lib/razorpay';
 import { createOrder } from '@/actions/order';
 import { useRouter } from 'next/navigation';
 import { useState, useEffect } from 'react';
+import { Trash2, Plus, Minus } from 'lucide-react'; // Import icons
 
 export default function CartPage() {
   const {
@@ -69,7 +71,9 @@ export default function CartPage() {
                 name: item.name,
                 price: item.price,
                 quantity: item.quantity,
-                imageUrl: item.imageUrl || null
+                imageUrl: item.imageUrl || null,
+                color: item.color, // Include color
+                size: item.size, // Include size
               })),
               total
             });
@@ -99,20 +103,20 @@ export default function CartPage() {
 
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-8">Your Cart ({itemCount})</h1>
-      
+      <h1 className="text-3xl font-bold mb-8 text-white">Your Cart ({itemCount})</h1>
+
       {items.length === 0 ? (
         <div className="text-center py-12">
-          <p className="text-lg mb-4">Your cart is empty</p>
-          <Link href="/products">
-            <Button>Continue Shopping</Button>
+          <p className="text-lg mb-4 text-gray-600">Your cart is empty</p>
+          <Link href="/products" className="inline-block">
+            <Button className="px-6 py-3">Continue Shopping</Button>
           </Link>
         </div>
       ) : (
         <div className="grid md:grid-cols-3 gap-8">
           <div className="md:col-span-2 space-y-4">
             {items.map((item) => (
-              <div key={item.id} className="border rounded-lg p-4 flex gap-4">
+              <div key={item.id} className="bg-white rounded-lg shadow-md p-4 flex gap-4">
                 <div className="w-24 h-24 relative">
                   <Image
                     src={item.imageUrl || '/images/placeholder-product.jpg'}
@@ -124,62 +128,119 @@ export default function CartPage() {
                 </div>
                 <div className="flex-1">
                   <Link href={`/products/${item.id}`} className="hover:underline">
-                    <h3 className="font-medium">{item.name}</h3>
+                    <h3 className="font-medium text-gray-800">{item.name}</h3>
                   </Link>
-                  <p>${item.price.toFixed(2)}</p>
+                  <p className="text-gray-600">${item.price.toFixed(2)}</p>
+
+                  {/* Display Size and Color */}
+                  {item.size && <p className="text-sm text-gray-500">Size: {item.size}</p>}
+                  {item.color && (
+                    <div className="flex items-center gap-1 text-sm text-gray-500">
+                      Color:
+                      <span
+                        className="block w-4 h-4 rounded-full border"
+                        style={{ backgroundColor: item.color }}
+                      ></span>
+                    </div>
+                  )}
+
                   <div className="flex items-center gap-2 mt-2">
-                    <button 
+                    <button
                       onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                      className="px-2 border rounded"
+                      className="px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200 disabled:opacity-50"
                       disabled={item.quantity <= 1}
                     >
-                      -
+                      <Minus className="h-4 w-4" />
                     </button>
-                    <span>{item.quantity}</span>
-                    <button 
+                    <span className="text-gray-700">{item.quantity}</span>
+                    <button
                       onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                      className="px-2 border rounded"
+                      className="px-2 py-1 rounded-full bg-gray-100 hover:bg-gray-200"
                     >
-                      +
+                      <Plus className="h-4 w-4" />
                     </button>
                   </div>
                 </div>
-                <button 
-                  onClick={() => removeFromCart(item.id)}
-                  className="text-red-500 hover:text-red-700"
-                >
-                  Remove
-                </button>
+                <div className="flex flex-col justify-between">
+                  <button
+                    onClick={() => removeFromCart(item.id)}
+                    className="text-red-500 hover:text-red-700"
+                    aria-label="Remove item"
+                  >
+                    <Trash2 className="h-5 w-5" />
+                  </button>
+                  <div>
+                    {item.size && <p className="text-sm text-gray-500">Size: {item.size}</p>}
+                    {item.color && (
+                      <div className="flex items-center gap-1 text-sm text-gray-500">
+                        Color:
+                        <span
+                          className="block w-4 h-4 rounded-full border"
+                          style={{ backgroundColor: item.color }}
+                        ></span>
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
             ))}
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={clearCart}
-              className="mt-4"
+              className="mt-4 text-white"
             >
               Clear Cart
             </Button>
           </div>
-          
-          <div className="border rounded-lg p-6 h-fit sticky top-4">
-            <h2 className="text-xl font-bold mb-4">Order Summary</h2>
+
+          <div className="border rounded-lg shadow-md p-6 h-fit sticky top-4 bg-white">
+            <h2 className="text-xl font-bold mb-4 text-gray-800">Order Summary</h2>
             <div className="space-y-4">
-              <div className="flex justify-between">
+              {/* Display Items with Size and Color */}
+              {items.map((item) => (
+                <div key={item.id} className="flex items-center justify-between py-2 border-b">
+                  <div className="flex items-center">
+                    <Image
+                      src={item.imageUrl || '/images/placeholder-product.jpg'}
+                      alt={item.name}
+                      width={40}
+                      height={40}
+                      className="rounded mr-2"
+                    />
+                    <div>
+                      <p className="text-sm font-medium text-gray-800">{item.name}</p>
+                      {item.size && <p className="text-xs text-gray-500">Size: {item.size}</p>}
+                      {item.color && (
+                        <div className="flex items-center gap-1 text-xs text-gray-500">
+                          Color:
+                          <span
+                            className="block w-3 h-3 rounded-full border"
+                            style={{ backgroundColor: item.color }}
+                          ></span>
+                        </div>
+                      )}
+                      <p className="text-xs text-gray-500">Qty: {item.quantity}</p>
+                    </div>
+                  </div>
+                  <span className="text-sm text-gray-700">${(item.price * item.quantity).toFixed(2)}</span>
+                </div>
+              ))}
+              <div className="flex justify-between text-gray-700">
                 <span>Subtotal</span>
                 <span>${total.toFixed(2)}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="flex justify-between text-gray-700">
                 <span>Shipping</span>
                 <span>Free</span>
               </div>
-              <div className="border-t pt-4 flex justify-between font-bold">
+              <div className="border-t pt-4 flex justify-between font-bold text-lg text-gray-800">
                 <span>Total</span>
                 <span>${total.toFixed(2)}</span>
               </div>
               <Button className="w-full mt-4" onClick={handleRazorpayPayment} disabled={isProcessing}>
                 {isProcessing ? 'Processing...' : 'Proceed to Checkout'}
               </Button>
-              <Link href="/products">
+              <Link href="/products" className="inline-block">
                 <Button variant="outline" className="w-full mt-2">
                   Continue Shopping
                 </Button>
@@ -194,8 +255,8 @@ export default function CartPage() {
             <div className="mb-4 p-3 bg-yellow-100 text-yellow-800 rounded text-center font-semibold">
               Please login to checkout.
             </div>
-            <h2 className="text-2xl font-bold mb-4">Login Required</h2>
-            <p className="mb-6">You need to login to proceed with checkout.</p>
+            <h2 className="text-2xl font-bold mb-4 text-gray-800">Login Required</h2>
+            <p className="mb-6 text-gray-700">You need to login to proceed with checkout.</p>
             <div className="flex flex-col space-y-3">
               <Link
                 href={`/login?redirect=/cart`}
