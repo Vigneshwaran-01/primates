@@ -80,6 +80,10 @@ const SelectItem = React.forwardRef<
 ))
 SelectItem.displayName = SelectPrimitive.Item.displayName
 
+const SelectIcon = SelectPrimitive.Icon; // Export SelectIcon
+const SelectItemText = SelectPrimitive.ItemText; // Export SelectItemText
+const SelectItemIndicator = SelectPrimitive.ItemIndicator; // Export SelectItemIndicator
+
 export {
   Select,
   SelectGroup,
@@ -87,4 +91,7 @@ export {
   SelectTrigger,
   SelectContent,
   SelectItem,
+  SelectIcon,  // Export SelectIcon
+  SelectItemText, // Export SelectItemText
+  SelectItemIndicator, // Export SelectItemIndicator
 }

@@ -15,13 +15,13 @@ interface Product {
 
 interface CartItem extends Product {
   quantity: number;
-  selectedSize?: string | null;
-  selectedColor?: string | null;
+  size?: string | null;  // Renamed from selectedSize
+  color?: string | null; // Renamed from selectedColor
 }
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product, quantity: number, selectedSize?: string | null, selectedColor?: string | null) => void;
+  addToCart: (product: Product, quantity: number, size?: string | null, color?: string | null) => void;
   removeFromCart: (productId: number) => void;
   updateQuantity: (productId: number, quantity: number) => void;
   clearCart: () => void;
@@ -54,12 +54,19 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [items, isMounted]);
 
-  const addToCart = (product: Product, quantity: number, selectedSize?: string | null, selectedColor?: string | null) => {
+  const addToCart = (product: Product, quantity: number, size?: string | null, color?: string | null) => {
     setItems((prevItems) => {
-      const existingItem = prevItems.find((item) => item.id === product.id && item.selectedSize === selectedSize && item.selectedColor === selectedColor);
+      const existingItem = prevItems.find(
+        (item) =>
+          item.id === product.id &&
+          item.size === size && // Use size instead of selectedSize
+          item.color === color  // Use color instead of selectedColor
+      );
       if (existingItem) {
         return prevItems.map((item) =>
-          item.id === product.id && item.selectedSize === selectedSize && item.selectedColor === selectedColor
+          item.id === product.id &&
+            item.size === size && // Use size instead of selectedSize
+            item.color === color  // Use color instead of selectedColor
             ? { ...item, quantity: item.quantity + quantity }
             : item
         );
@@ -69,8 +76,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
         {
           ...product,
           quantity,
-          selectedSize,
-          selectedColor,
+          size,  // Use size instead of selectedSize
+          color, // Use color instead of selectedColor
         },
       ];
     });
