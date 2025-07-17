@@ -1,13 +1,13 @@
-'use client';
+"use client";
 
-import { useRef, useEffect } from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Button } from '@/components/ui/button';
-import { useCart } from '@/providers/CartProvider';
-import { Plus } from 'lucide-react';
-import { cn } from '@/lib/utils';
-import gsap from 'gsap';
+import { useRef, useEffect } from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Button } from "@/components/ui/button";
+import { useCart } from "@/providers/CartProvider";
+import { Plus } from "lucide-react";
+import { cn } from "@/lib/utils";
+import gsap from "gsap";
 
 type ProductCardProps = {
   product: {
@@ -15,6 +15,7 @@ type ProductCardProps = {
     name: string;
     price: number;
     imageUrl?: string | null;
+    additionalImages?: string | string[];
     quantity?: number;
     sizes?: string[];
     category?: { name: string };
@@ -24,24 +25,21 @@ type ProductCardProps = {
 
 export default function ProductCard({ product, className }: ProductCardProps) {
   const { addToCart } = useCart();
-
   const sizeOverlayRef = useRef<HTMLDivElement | null>(null);
-  // Removed addBtnRef as we are no longer applying a continuous GSAP animation to it.
 
   useEffect(() => {
     const sizeOverlay = sizeOverlayRef.current;
-    // Ensure both ref.current and its closest parent exist
-    const imageWrapper = sizeOverlay?.closest('.image-wrapper');
+    const imageWrapper = sizeOverlay?.closest(".image-wrapper");
     if (!sizeOverlay || !imageWrapper) return;
 
-    gsap.set(sizeOverlay, { opacity: 0, y: 30, display: 'none' });
+    gsap.set(sizeOverlay, { opacity: 0, y: 30, display: "none" });
 
     const handleEnter = () => {
       gsap.killTweensOf(sizeOverlay);
       gsap.fromTo(
         sizeOverlay,
-        { opacity: 0, y: 30, display: 'flex' },
-        { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' }
+        { opacity: 0, y: 30, display: "flex" },
+        { opacity: 1, y: 0, duration: 0.5, ease: "power3.out" }
       );
     };
 
@@ -50,76 +48,89 @@ export default function ProductCard({ product, className }: ProductCardProps) {
       gsap.to(sizeOverlay, {
         opacity: 0,
         y: 30,
-        duration: 0.4,
-        ease: 'power3.in',
-        onComplete: () => { gsap.set(sizeOverlay, { display: 'none' }); },
+        duration: 0.3,
+        ease: "power3.in",
+        onComplete: () => {
+          gsap.set(sizeOverlay, { display: "none" });
+        },
       });
     };
 
-    imageWrapper.addEventListener('mouseenter', handleEnter);
-    imageWrapper.addEventListener('mouseleave', handleLeave);
+    imageWrapper?.addEventListener("mouseenter", handleEnter);
+    imageWrapper?.addEventListener("mouseleave", handleLeave);
 
     return () => {
-      imageWrapper.removeEventListener('mouseenter', handleEnter);
-      imageWrapper.removeEventListener('mouseleave', handleLeave);
+      imageWrapper?.removeEventListener("mouseenter", handleEnter);
+      imageWrapper?.removeEventListener("mouseleave", handleLeave);
       gsap.killTweensOf(sizeOverlay);
     };
   }, []);
 
-  // Removed the useEffect for addBtnRef as it's no longer needed for the continuous bounce animation.
-  // The hover effect is handled by Tailwind's transition-transform hover:scale-110.
-
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
-    e.stopPropagation(); // Crucial to prevent Link navigation when clicking the button
-
+    e.stopPropagation();
     addToCart(product, 1);
   };
 
-  const getImagePath = (imageUrl: string | null | undefined) => {
-    if (!imageUrl) return '/placeholder.png';
-    if (imageUrl.startsWith('http')) return imageUrl;
-    return `${imageUrl}`;
+  const getImagePath = (url: string | null | undefined) => {
+    if (!url) return "/placeholder.png";
+    return url.startsWith("http") ? url : `${url}`;
   };
 
+  const additionalImages: string[] = (() => {
+    if (Array.isArray(product.additionalImages)) return product.additionalImages;
+    if (typeof product.additionalImages === "string") {
+      try {
+        const parsed = JSON.parse(product.additionalImages);
+        return Array.isArray(parsed) ? parsed : [];
+      } catch {
+        return [];
+      }
+    }
+    return [];
+  })();
+
+  const hoverImage = additionalImages[0] || product.imageUrl;
+
   return (
-    // This is now the single root div for the ProductCard component.
-    // It is `relative` for the absolutely positioned `Plus` button.
     <div
       className={cn(
-        "group relative flex flex-col h-full w-full overflow-hidden rounded-2xl p-3 transition-all",
-        "bg-[#1A1A1A] hover:bg-[#2A0A0A] border border-transparent hover:border-red-800/50",
+        "group relative flex flex-col h-[550px] w-full overflow-hidden rounded-xl bg-[#1A1A1A] transition-all",
         className
       )}
     >
-      {/* The Link wraps the product image and text info for navigation to the product page */}
-      {/* It should NOT wrap the "Add to Cart" button, as that button has its own action */}
       <Link href={`/products/${product.id}`} className="flex-grow flex flex-col">
-        <div className="relative w-full aspect-square overflow-hidden rounded-md mx-auto image-wrapper">
-          {/* Wishlist Icon */}
-          <div className="absolute top-2 right-2 z-10 flex gap-2">
-            <button
-              className="bg-black/70 text-white p-1.5 rounded-full hover:bg-red-600 transition-all"
-              aria-label="Add to Wishlist"
-            >
-              <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.8} stroke="currentColor" className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M21 8.25c0 6.75-9 12.75-9 12.75S3 15 3 8.25a5.25 5.25 0 0110.5 0A5.25 5.25 0 0121 8.25z" />
-              </svg>
-            </button>
-          </div>
+        <div className="relative w-full h-[75%] overflow-hidden image-wrapper rounded-t-xl">
+          {/* Main Image */}
+          <Image
+            src={getImagePath(product.imageUrl)}
+            alt={product.name}
+            fill
+            className="object-cover object-center transition-transform duration-500 ease-in-out group-hover:scale-125"
+          />
 
-          {/* Sizes Overlay */}
+          {/* Hover Image */}
+          {hoverImage && (
+            <Image
+              src={getImagePath(hoverImage)}
+              alt={`${product.name} Hover`}
+              fill
+              className="absolute inset-0 object-cover object-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-in-out group-hover:scale-125"
+            />
+          )}
+
+          {/* Sizes Overlay - Bottom 25% */}
           {product.sizes && product.sizes.length > 0 && (
             <div
               ref={sizeOverlayRef}
-              className="absolute bottom-4 left-4 right-4 z-20 flex flex-wrap justify-center gap-2 bg-black/60 backdrop-blur-md rounded-md py-2 px-2"
-              style={{ display: 'none' }}
+              className="absolute bottom-0 left-0 right-0 h-[25%] z-30 flex items-center justify-center bg-black/70 backdrop-blur-md text-white"
+              style={{ display: "none" }}
             >
-              <div className="p-2 bg-black/30 rounded-lg border border-red-800  flex gap-2 flex-wrap justify-center">
+              <div className="flex gap-2 flex-wrap justify-center w-full px-4">
                 {product.sizes.map((size, i) => (
                   <span
                     key={i}
-                    className="text-xs font-bold tracking-wide px-3 py-1 rounded-md border border-red-500 text-red-300 hover:bg-red-600 hover:text-white transition-all duration-150"
+                    className="flex-1 text-xs text-center font-bold tracking-wide py-2 rounded-md border border-white hover:bg-white hover:text-black transition-all duration-150"
                   >
                     {size}
                   </span>
@@ -127,31 +138,18 @@ export default function ProductCard({ product, className }: ProductCardProps) {
               </div>
             </div>
           )}
-
-          <Image
-            src={getImagePath(product.imageUrl)}
-            alt={product.name}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 25vw"
-            className="object-cover object-center transition-transform duration-500 ease-in-out group-hover:scale-110"
-          />
         </div>
 
-        {/* Product Name and Price */}
-        <div className="text-center mt-3">
-          <h3 className="text-sm px-4 font-semibold tracking-wide text-white">
-            {product.name.toUpperCase()}
-          </h3>
-          <p className="text-white/70 mt-1 text-xs">${product.price.toFixed(2)}</p>
+        {/* Product Info */}
+        <div className="h-[25%] px-4 py-3 text-center flex flex-col justify-center">
+          <h3 className="text-sm font-semibold text-white leading-tight line-clamp-2">{product.name.toUpperCase()}</h3>
+          <p className="text-white/70 text-xs mt-1">₹{product.price.toFixed(0)}</p>
         </div>
-      </Link> {/* End of Link wrapping image and text */}
+      </Link>
 
-      {/* 🪄 Add-to-Cart Button - Positioned absolutely at the bottom-right of the whole card */}
       <Button
-        // Removed ref as no GSAP animation is applied to it
         onClick={handleAddToCart}
-        // These classes position it relative to the main `ProductCard` div
-        className="absolute bottom-2 right-2 z-10 bg-red-600 text-white w-10 h-10 rounded-full p-0 flex items-center justify-center shadow-md transition-transform duration-200 hover:scale-110 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-600 focus:ring-offset-2"
+        className="absolute bottom-3 right-3 z-40 bg-red-600 text-white w-10 h-10 rounded-full p-0 flex items-center justify-center shadow-md transition-transform duration-200 hover:scale-110 hover:bg-red-700 focus:outline-none"
         aria-label={`Add ${product.name} to cart`}
       >
         <Plus size={20} />
