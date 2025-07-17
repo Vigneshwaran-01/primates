@@ -1,5 +1,4 @@
-// tailwind.config.ts
-// import { Config } from 'tailwindcss'; // Not needed in JS, so removed
+import { fontFamily } from 'tailwindcss/defaultTheme'; // Required for spreading default fonts
 
 const config = {
   content: [
@@ -9,6 +8,10 @@ const config = {
   ],
   theme: {
     extend: {
+      fontFamily: {
+        sans: ['var(--font-bebas-neue)', ...fontFamily.sans], // Optional: override default
+        'bebas-neue': ['var(--font-bebas-neue)'], // This is what you use as `font-bebas-neue`
+      },
       colors: {
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
@@ -43,13 +46,14 @@ const config = {
         'special-offer-foreground': '#fff',
       },
       animation: {
-    fadeIn: 'fadeIn 0.5s ease-out',
-  },keyframes: {
-    fadeIn: {
-      '0%': { opacity: 0, transform: 'scale(0.9)' },
-      '100%': { opacity: 1, transform: 'scale(1)' },
-    },
-  },
+        fadeIn: 'fadeIn 0.5s ease-out',
+      },
+      keyframes: {
+        fadeIn: {
+          '0%': { opacity: 0, transform: 'scale(0.9)' },
+          '100%': { opacity: 1, transform: 'scale(1)' },
+        },
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',

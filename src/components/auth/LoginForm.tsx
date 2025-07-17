@@ -5,6 +5,26 @@ import { useState, FormEvent } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Loader2, LogIn, UserPlus } from 'lucide-react';
+import { motion } from 'framer-motion'; // Import framer-motion
+import localFont from 'next/font/local' // Import localFont
+
+const bebasNeue = localFont({
+  src: [
+    {
+      path: '../../fonts/BebasNeue-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-bebas-neue',
+})
+
+
+const fadeInVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
+
 
 export default function LoginForm() {
   const [email, setEmail] = useState('');
@@ -39,24 +59,32 @@ export default function LoginForm() {
   };
 
   return (
-    <div className="w-full animate-fade-in-up animation-delay-700">
+    <motion.div
+      className="w-full"
+      variants={fadeInVariants}
+      initial="initial"
+      animate="animate"
+    >
       <div className="text-center mb-10">
-        <h2 className="text-4xl font-bebas tracking-wider text-white mb-2 filter drop-shadow-md">
+        <h2 className={`text-4xl tracking-wider text-white mb-2 filter drop-shadow-md ${bebasNeue.variable} font-bebas-neue`}>
          LOGIN
         </h2>
-        <p className="text-gray-400 text-sm">
+        <p className={`text-gray-400 text-sm max-w-md mx-auto ${bebasNeue.variable}`}>
           Access your personal fitness dashboard.
         </p>
       </div>
 
       {error && (
-        <div
+        <motion.div
           className="bg-destructive/20 border border-destructive/50 text-destructive-foreground p-3 mb-6 rounded-md text-xs"
           role="alert"
+          variants={fadeInVariants}
+          initial="initial"
+          animate="animate"
         >
           <p className="font-semibold">Login Error!</p>
           <p>{error}</p>
-        </div>
+        </motion.div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-6">
@@ -150,6 +178,6 @@ export default function LoginForm() {
           <span className='text-white font-semibold'>Create Account</span>
         </Link>
       </div>
-    </div>
+    </motion.div>
   );
 }

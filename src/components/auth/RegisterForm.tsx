@@ -6,6 +6,19 @@ import { useState, ChangeEvent, FormEvent } from 'react';
 import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { Loader2 } from 'lucide-react';
+import localFont from 'next/font/local';
+
+
+const bebasNeue = localFont({
+  src: [
+    {
+      path: '../../fonts/BebasNeue-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-bebas-neue',
+});
 
 // Updated FormField Helper Component
 interface FormFieldProps {
@@ -89,12 +102,12 @@ export default function RegisterForm() {
   };
 
   return (
-    <div className="w-full animate-fade-in-up animation-delay-700">
+    <div className="w-full animate-fade-in-up animation-delay-700 ${bebasNeue.variable} font-bebas-neue">
       <div className="text-center mb-8">
-        <h2 className="text-4xl font-bebas tracking-wider text-white mb-2 filter drop-shadow-md">
+        <h2 className={`text-4xl font-bebas tracking-wider text-white mb-2 filter drop-shadow-md ${bebasNeue.variable} font-bebas-neue`}>
           CREATE YOUR ACCOUNT
         </h2>
-        <p className="text-gray-400 text-sm">
+        <p className="text-gray-400 text-sm ${bebasNeue.variable} font-bebas-neue">
           Join our fitness community and start your journey.
         </p>
       </div>
