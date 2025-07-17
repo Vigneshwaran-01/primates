@@ -2,6 +2,24 @@ import LoginForm from '@/components/auth/LoginForm';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Suspense } from 'react';
+import localFont from 'next/font/local' // Import localFont
+
+const bebasNeue = localFont({
+  src: [
+    {
+      path: '../../../fonts/BebasNeue-Regular.ttf',
+      weight: '400',
+      style: 'normal',
+    },
+  ],
+  variable: '--font-bebas-neue',
+})
+
+
+const fadeInVariants = {
+  initial: { opacity: 0, y: 20 },
+  animate: { opacity: 1, y: 0, transition: { duration: 0.5, ease: "easeOut" } },
+};
 
 export default function LoginPage() {
   return (
@@ -16,9 +34,10 @@ export default function LoginPage() {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black/50 to-transparent"></div>
         <div className="absolute bottom-0 left-0 p-8 xl:p-12">
-          <h1 className="text-4xl xl:text-5xl font-bebas mb-4 leading-tight filter drop-shadow-lg animate-fade-in-up animation-delay-300">
-            UNLOCK YOUR <span className="text-red-600">POTENTIAL</span>.
-          </h1>
+          <h1 className={`${bebasNeue.variable} font-bebas-neue text-4xl xl:text-5xl mb-4 leading-tight filter drop-shadow-lg animate-fade-in-up animation-delay-300`}>
+  UNLOCK YOUR <span className="text-red-600">POTENTIAL</span>
+</h1>
+
           <p className="text-lg xl:text-xl text-gray-300 filter drop-shadow animate-fade-in-up animation-delay-500">
             Track progress, crush goals. Your journey starts now.
           </p>
