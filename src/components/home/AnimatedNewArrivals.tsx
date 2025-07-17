@@ -41,16 +41,16 @@ interface AnimatedNewArrivalsProps {
   products?: ProductForPage[];
 }
 
-// --- Main Component ---
+// --- Main Component ---ENTER THE
 export default function AnimatedNewArrivals({ products: propProducts }: AnimatedNewArrivalsProps) {
   const sectionRef = useRef<HTMLDivElement>(null);
   const titleRef = useRef<HTMLHeadingElement>(null);
 
-  const categories = ['all', 'gym', 'smartphone'];
+  const categories = ['All', 'TOP', 'BOTTOM'];
   const [activeCategory, setActiveCategory] = useState(categories[0]);
 
   const visibleProducts = (propProducts ?? []).filter(p => {
-    if (activeCategory === 'all') return true;
+    if (activeCategory === 'All') return true;
     return p.name.toLowerCase().includes(activeCategory);
   });
   
@@ -155,11 +155,10 @@ export default function AnimatedNewArrivals({ products: propProducts }: Animated
         ref={titleRef}
         className="text-4xl sm:text-5xl lg:text-5xl font-black uppercase italic leading-tight "
       >
-        <span className=" font-bold text-stroke-white">WE’RE ALL ABOUT</span>
+        <span className=" font-bold text-white">WE’RE ALL ABOUT</span>
         <span className="block text-[#D30000]  mt-1">
           FRESH STYLES
         </span>
-        <span className="block text-stroke-white mt-1">AND GOOD VIBES</span>
       </h2>
 
       <p className="mt-6 text-gray-400 text-base sm:text-lg tracking-wider">
