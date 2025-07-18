@@ -132,11 +132,11 @@ export default async function HomePage() {
         }))}
       />
       <HeroParallaxDemo />
-
+     
        <ZymAboutSection />
-
  <PrimateHero />
- <CardRow />
+
+
 
      
       

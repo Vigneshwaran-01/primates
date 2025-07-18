@@ -2,29 +2,31 @@
 
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
-import { ScrollTrigger } from 'gsap/all';
 
-gsap.registerPlugin(ScrollTrigger);
-
+// The offers list
 const offers = [
   'FRESH ARRIVALS',
   "STEP INTO '25",
   'LIMITED RELEASE',
   'NEW SEASON DROP',
+  'EXCLUSIVE ACCESS',
+  'GEAR UP NOW',
 ];
 
-export default function SpecialOfferBanner() {
+export default function HoloTicker() {
   const tickerRef = useRef<HTMLDivElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const container = tickerRef.current;
-    if (!container) return undefined;
+    const container = containerRef.current;
+    const ticker = tickerRef.current;
+    if (!container || !ticker) return;
 
-    const totalWidth = container.scrollWidth / 2;
-
-    const animation = gsap.to(container, {
+    // --- 1. HORIZONTAL SCROLL ANIMATION ---
+    const totalWidth = ticker.scrollWidth / 2;
+    gsap.to(ticker, {
       x: `-=${totalWidth}`,
-      duration: 20,
+      duration: 30,
       ease: 'linear',
       repeat: -1,
       modifiers: {
@@ -32,8 +34,34 @@ export default function SpecialOfferBanner() {
       },
     });
 
+    // --- 2. INTERACTIVE MOUSE DISTORTION ---
+    // Use quickTo for high-performance animation on mouse move
+    const skewTo = gsap.quickTo(ticker, 'skewX', { duration: 0.5, ease: 'power2.out' });
+    const blurTo = gsap.quickTo(ticker, 'filter', { duration: 0.5, ease: 'power2.out' });
+
+    const handleMouseMove = (e: MouseEvent) => {
+      const { clientX, currentTarget } = e;
+      const rect = (currentTarget as HTMLElement).getBoundingClientRect();
+      const move = (clientX - rect.left) / rect.width; // 0 to 1
+      const skew = gsap.utils.mapRange(0, 1, -10, 10, move); // map mouse pos to skew
+      const blur = gsap.utils.mapRange(0, 0.5, 2, 0, Math.abs(move - 0.5)); // blur at edges
+      skewTo(skew);
+      blurTo(`blur(${blur}px)`);
+    };
+
+    const handleMouseLeave = () => {
+      skewTo(0);
+      blurTo('blur(1px)');
+    };
+
+    container.addEventListener('mousemove', handleMouseMove);
+    container.addEventListener('mouseleave', handleMouseLeave);
+
+    // Cleanup function
     return () => {
-      animation.kill();
+      gsap.killTweensOf(ticker);
+      container.removeEventListener('mousemove', handleMouseMove);
+      container.removeEventListener('mouseleave', handleMouseLeave);
     };
   }, []);
 
@@ -41,17 +69,49 @@ export default function SpecialOfferBanner() {
     [...offers, ...offers].map((text, index) => (
       <div
         key={index}
-        className="ticker-item flex items-center gap-3 text-black text-sm font-semibold tracking-widest uppercase px-6 whitespace-nowrap"
+        className="ticker-item flex items-center gap-4 text-neutral-300 text-sm font-mono tracking-wider uppercase px-8 whitespace-nowrap"
       >
-        <span className="text-lg">✦</span> {text}
+        <span className="text-base text-[#db2525] font-bold">//</span>
+        
+        <span>{text}</span>
+        <span className="text-white">✦</span>
       </div>
     ));
 
   return (
-    <div className="relative overflow-hidden bg-white h-10 w-full border-t border-b border-white/10">
-      <div ref={tickerRef} className="flex w-max">
-        {renderItems()}
+    // Main container with perspective for the 3D effect
+    <div
+      ref={containerRef}
+      className="holo-ticker-container relative h-12 w-full bg-black overflow-hidden"
+      style={{ perspective: '300px' }}
+    >
+      {/* The wrapper that is tilted in 3D space */}
+      <div
+        className="absolute w-full h-full"
+        style={{ transform: 'rotateX(15deg) scale(1.2)' }}
+      >
+        <div ref={tickerRef} className="flex w-max items-center h-full">
+          {renderItems()}
+        </div>
       </div>
+
+      {/* Fade overlays for the infinite effect */}
+      <div className="absolute left-0 top-0 bottom-0 w-24 bg-gradient-to-r from-black to-transparent z-10 pointer-events-none"></div>
+      <div className="absolute right-0 top-0 bottom-0 w-24 bg-gradient-to-l from-black to-transparent z-10 pointer-events-none"></div>
+
+      {/* Add the CSS for the pulsing container glow */}
+      <style jsx>{`
+        .holo-ticker-container {
+          box-shadow: 0 0 15px 0px rgba(219, 37, 37, 0.2);
+          animation: pulse-glow 3s infinite ease-in-out;
+        }
+
+        @keyframes pulse-glow {
+          0% { box-shadow: 0 0 15px 0px rgba(219, 37, 37, 0.2); }
+          50% { box-shadow: 0 0 25px 5px rgba(219, 37, 37, 0.4); }
+          100% { box-shadow: 0 0 15px 0px rgba(219, 37, 37, 0.2); }
+        }
+      `}</style>
     </div>
   );
 }
