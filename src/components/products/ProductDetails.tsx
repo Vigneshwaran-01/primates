@@ -164,14 +164,14 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
   };
 
   return (
-    <div className="bg-white text-gray-800 font-sans">
+    <div className="bg-[#000000] text-gray-800 font-sans">
       {showAddToCartToast && (
-        <div className="fixed top-6 right-6 z-50 bg-green-500 text-white px-4 py-2 rounded shadow-md">
+        <div className="fixed top-6 right-6 z-50 bg-green-500 text-white  rounded shadow-md">
           Added to cart! <Check className="inline-block w-4 h-4 ml-1" />
         </div>
       )}
 
-      <div className="container mx-auto py-12 px-4 md:px-6 lg:px-8">
+      <div className="container mx-auto py-12  md:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           {/* Product Images */}
           <div className="flex flex-col lg:flex-row gap-4">
@@ -214,19 +214,19 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
           {/* Product Info & Actions */}
           <div className="flex flex-col gap-4">
-            <h1 className="text-3xl font-semibold text-gray-900">{product.name}</h1>
+            <h1 className="text-3xl font-semibold text-white">{product.name}</h1>
             <div className="flex items-center gap-2">
               <div className="flex items-center text-yellow-500">
                 {ratingStars(avgRating)}
               </div>
-              <span className="text-sm text-gray-500">({reviews.length} ratings)</span>
+              <span className="text-sm text-white">({reviews.length} ratings)</span>
             </div>
-            <p className="text-2xl font-bold text-gray-700">₹{product.price.toFixed(0)}</p>
+            <p className="text-2xl font-bold text-white">₹{product.price.toFixed(0)}</p>
 
             {/* Size Selection */}
             <div>
               <div className="flex items-center justify-between mb-2">
-                <h3 className="text-sm font-medium text-gray-700">Select Size</h3>
+                <h3 className="text-sm font-medium text-white">Select Size</h3>
                 <button
                   onClick={() => setIsSizeChartOpen(true)}
                   className="text-blue-500 text-sm cursor-pointer hover:underline"
@@ -243,7 +243,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                       `rounded-md px-3 py-2 border text-sm transition-colors duration-200`,
                       selectedSize === size
                         ? 'bg-blue-500 text-white border-blue-500'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-blue-500 hover:text-blue-700'
+                        : 'bg-white text-gray-500 border-gray-300 hover:border-blue-500 hover:text-blue-700'
                     )}
                     onClick={() => setSelectedSize(size)}
                   >
@@ -255,7 +255,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
             {/* Color Selection */}
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Select Color</h3>
+              <h3 className="text-sm font-medium text-white mb-2">Select Color</h3>
               <div className="flex flex-wrap gap-2">
                 {product.colors?.map((color: string) => (
                   <button
@@ -274,7 +274,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
 
             {/* Quantity Selection */}
             <div>
-              <h3 className="text-sm font-medium text-gray-700 mb-2">Quantity</h3>
+              <h3 className="text-sm font-medium text-white mb-2">Quantity</h3>
               <div className="flex items-center space-x-3">
                 <button
                   className="rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 px-3 py-2 transition-colors duration-200"
@@ -328,7 +328,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                       'flex-1 text-center py-2 text-sm font-medium transition-colors duration-200 ease-in-out focus:outline-none',
                       selected
                         ? 'border-b-2 border-blue-500 text-blue-600'
-                        : 'border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+                        : 'border-b-2 border-transparent text-gray-500 hover:text-white hover:border-gray-300'
                     )
                   }
                 >
@@ -366,7 +366,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                   )}
                   {user ? (
                     <form onSubmit={handleReviewSubmit} className="mb-8 p-4 border border-gray-200 rounded-md bg-white">
-                      <h3 className="text-md font-medium mb-2 text-gray-700">Leave a Review</h3>
+                      <h3 className="text-md font-medium mb-2 text-white">Leave a Review</h3>
                       <div className="flex items-center gap-2 mb-4">
                         {[1, 2, 3, 4, 5].map(star => (
                           <button
@@ -379,7 +379,7 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                         ))}
                       </div>
                       <textarea
-                        className="w-full border border-gray-300 bg-white text-gray-700 rounded p-3 mb-3 focus:ring-blue-500 focus:border-blue-500"
+                        className="w-full border border-gray-300 bg-white text-white rounded p-3 mb-3 focus:ring-blue-500 focus:border-blue-500"
                         rows={4}
                         value={userComment}
                         onChange={e => setUserComment(e.target.value)}
@@ -504,9 +504,9 @@ export default function ProductDetails({ product }: ProductDetailsProps) {
                             {sizeChartData.map((item) => (
                               <tr key={item.size} className="hover:bg-gray-100 transition-colors">
                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{item.size}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.chest}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.waist}</td>
-                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-700">{item.hip}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{item.chest}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{item.waist}</td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-white">{item.hip}</td>
                               </tr>
                             ))}
                           </tbody>

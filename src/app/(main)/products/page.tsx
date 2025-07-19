@@ -2,43 +2,56 @@ import prisma from '@/lib/db';
 import ProductFilters from '@/components/products/ProductFilters';
 import ProductCard from '@/components/products/ProductCard';
 
-export default async function ProductsPage(props: {
-  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+export default async function ProductsPage({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
 }) {
-  const searchParams = await props.searchParams;
-
+  // Await the searchParams
   const safeParams = {
-    category: typeof searchParams.category === 'string' 
-      ? searchParams.category 
+    category: typeof searchParams.category === 'string'
+      ? searchParams.category
       : undefined,
-    minPrice: typeof searchParams.minPrice === 'string' 
-      ? Number(searchParams.minPrice) 
+    minPrice: typeof searchParams.minPrice === 'string'
+      ? Number(searchParams.minPrice)
       : undefined,
-    maxPrice: typeof searchParams.maxPrice === 'string' 
-      ? Number(searchParams.maxPrice) 
+    maxPrice: typeof searchParams.maxPrice === 'string'
+      ? Number(searchParams.maxPrice)
       : undefined,
-    sort: typeof searchParams.sort === 'string' 
-      ? searchParams.sort 
+    sort: typeof searchParams.sort === 'string'
+      ? searchParams.sort
+      : undefined,
+    search: typeof searchParams.search === 'string'
+      ? searchParams.search
       : undefined,
   };
 
+  const whereClause: any = {
+    categoryId: safeParams.category && safeParams.category !== 'all'
+      ? Number(safeParams.category)
+      : undefined,
+    price: {
+      gte: safeParams.minPrice,
+      lte: safeParams.maxPrice,
+    },
+  };
+
+  if (safeParams.search) {
+    whereClause.name = {
+      contains: safeParams.search,
+      mode: 'insensitive',
+    };
+  }
+
   const [products, categories] = await Promise.all([
     prisma.product.findMany({
-      where: {
-        categoryId: safeParams.category && safeParams.category !== 'all' 
-          ? Number(safeParams.category) 
-          : undefined,
-        price: {
-          gte: safeParams.minPrice,
-          lte: safeParams.maxPrice,
-        },
-      },
+      where: whereClause,
       orderBy: {
-        price: safeParams.sort === 'price-asc' 
-          ? 'asc' 
-          : safeParams.sort === 'price-desc' 
-          ? 'desc' 
-          : undefined,
+        price: safeParams.sort === 'price-asc'
+          ? 'asc'
+          : safeParams.sort === 'price-desc'
+            ? 'desc'
+            : undefined,
       },
       include: {
         category: true,
@@ -52,12 +65,11 @@ export default async function ProductsPage(props: {
   ]);
 
   return (
-    <div className="  backdrop-blur-sm bg-white/10 min-h-screen py-10">
+    <div className="backdrop-blur-sm bg-white/10 min-h-screen py-10">
       <div className="container mx-auto px-4 md:px-8 lg:px-16">
-        
         {/* Page Title */}
         <div className="mb-10 text-center">
-          <h1 className="text-4xl font-bold tracking-tight text-gray-800 uppercase font-bebas">
+          <h1 className="text-4xl font-bold tracking-tight text-white uppercase font-bebas">
             Explore Our Collection
           </h1>
           <p className="text-gray-500 text-base mt-2">

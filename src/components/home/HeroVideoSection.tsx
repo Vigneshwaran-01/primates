@@ -3,6 +3,7 @@
 import React, { useEffect, useLayoutEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ChevronDown, ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation'; // or 'next/router' if using Pages Router
 
 // --- Font Imports to match your theme ---
 import { Russo_One, Chakra_Petch } from 'next/font/google';
@@ -37,6 +38,8 @@ const HeroVideoSection = () => {
   const heroContentRef = useRef(null);
   const heroVideoUrl = 'https://res.cloudinary.com/dzldch2cm/video/upload/v1746877370/Fitness_Cinematic_video___Gym_commercial___Cinematic_fitness_film___Fitness_commercial_2K_HD_gbs5gu.webm';
   const heroFallbackImageUrl = '/images/gym-hero-bg.jpg';
+  const router = useRouter();
+
 
   useLayoutEffect(() => {
     const ctx = gsap.context(() => {
@@ -110,7 +113,7 @@ const HeroVideoSection = () => {
         >
           <div className="transform -skew-x-12  w-1/2">
             <h1 className="font-russo text-5xl md:text-7xl lg:text-8xl font-black leading-none tracking-tight">
-              <div className="reveal-text text-stroke-white">ENTER THE</div>
+              <div className="reveal-text text-white">ENTER THE</div>
               <div className="reveal-text text-[#D30000] mt-1">NEW ERA</div>
             </h1>
 
@@ -118,12 +121,13 @@ const HeroVideoSection = () => {
               Discover bold, futuristic apparel that fuses high-tech edge with luxury minimalism. Your ideology, defined.
             </p>
 
-            <button
-              className="group mt-10 inline-flex items-center gap-4 px-8 py-3 bg-[#D30000] text-white font-russo font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 ease-in-out"
-            >
-              <span>Explore Collection</span>
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-300" />
-            </button>
+             <button
+      className="group mt-10 inline-flex items-center gap-4 px-8 py-3 bg-[#D30000] text-white font-russo font-bold text-sm tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300 ease-in-out"
+      onClick={() => router.push('/products')}
+    >
+      <span>Explore Collection</span>
+      <ArrowRight className="w-5 h-5 group-hover:translate-x-1.5 transition-transform duration-300" />
+    </button>
           </div>
         </div>
 
