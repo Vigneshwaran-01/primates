@@ -6,9 +6,11 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import ProductCard from '@/components/products/ProductCard';
 import { cn } from '@/lib/utils';
 import Image from 'next/image';
+// import { useSearchStore } from '@/stores/useSearchStore';
 
 // --- Import new font: Catamaran for the Tamil glyph ---
 import { Russo_One, Orbitron, Chakra_Petch, Catamaran } from 'next/font/google';
+import { useSearchStore } from '../stores/useSearchStore';
 
 if (typeof window !== 'undefined') {
   gsap.registerPlugin(ScrollTrigger);
@@ -48,11 +50,18 @@ export default function AnimatedNewArrivals({ products: propProducts }: Animated
 
   const categories = ['All', 'TOP', 'BOTTOM'];
   const [activeCategory, setActiveCategory] = useState(categories[0]);
+  const { query } = useSearchStore();
 
-  const visibleProducts = (propProducts ?? []).filter(p => {
-    if (activeCategory === 'All') return true;
-    return p.name.toLowerCase().includes(activeCategory);
-  });
+  const visibleProducts = (propProducts ?? []).filter((product) => {
+  const matchCategory =
+    activeCategory === 'All' || product.name.toLowerCase().includes(activeCategory.toLowerCase());
+
+  const matchSearch =
+    query.trim() === '' || product.name.toLowerCase().includes(query.toLowerCase());
+
+  return matchCategory && matchSearch;
+});
+
   
   const tamilGlyphs = ['●', '◆', '⬤', '■', '△', '✦', '✕'];
 

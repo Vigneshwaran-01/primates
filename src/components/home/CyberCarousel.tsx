@@ -138,9 +138,9 @@ export default function CyberCarousel() {
         {/* ✅ Responsive Title Block */}
         <div className={`absolute top-24 left-4 sm:left-12 md:left-24 lg:left-32 z-30 transform -skew-x-12 max-w-[80%]  ${russo.variable}`}>
           <h1 className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black leading-tight sm:leading-none">
-            <div className="reveal-element text-stroke-white">THEORY OF IDEOLOGY</div>
+            <div className="reveal-element text-white">THEORY OF IDEOLOGY</div>
             <div className="reveal-element text-[#D30000] mt-1">COLLECTION</div>
-            <div className="reveal-element text-stroke-white mt-1">AVAILABLE</div>
+            <div className="reveal-element text-white mt-1">AVAILABLE</div>
           </h1>
         </div>
         
